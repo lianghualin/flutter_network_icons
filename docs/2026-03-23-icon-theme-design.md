@@ -57,10 +57,12 @@ enum TopoDeviceType {
 - **Style:** Flat, minimal, single-color fill with optional subtle stroke
 - **Normal color:** `#4B7BEC` (blue) with lighter fill `#D6E4FF` for body
 - **Error color:** `#E74C3C` (red) with lighter fill `#FDDFDF` for body
-- **Must use `<path>` elements** — required for `SvgCacheManager.getPath()` clipper
-- **No `<text>` elements** — labels are rendered by the node layer
+- **Must use `<path>` elements** — required for `SvgCacheManager.getPath()` clipper. All shapes (including circles, ellipses, question marks) must be converted to `<path>` elements. No `<circle>`, `<ellipse>`, `<rect>` elements.
+- **No `<text>` elements** — labels are rendered by the node layer. The "?" in the unknown icon must be a `<path>` (glyph outline converted to path), not a `<text>` element.
 - **Clean silhouette** — recognizable at 60-80px display size
 - **Consistent padding** — ~4px inset from viewbox edges
+
+**Note on `_pathRegex`:** The current regex in `svg_cache.dart` (`<path\s+d="..."`) requires `d` to be the first attribute on `<path>`. This is fragile — SVG editors emit attributes in arbitrary order. **Fix required in `topology_view`:** update regex to `<path\s[^>]*\bd="([^"]+)"` to handle any attribute order. Until fixed, SVG authors must ensure `d` is the first attribute on every `<path>` element.
 
 ---
 
@@ -76,7 +78,7 @@ enum TopoDeviceType {
 | **Firewall** | Shield | Classic shield shape. Solid fill. |
 | **Server** | Stacked rectangles | 2-3 horizontal stacked rectangles representing a rack server. |
 | **Generic** | Circle | Simple filled circle with thin stroke. Default for untyped nodes. |
-| **Unknown** | Circle + question mark | Circle with a `?` cutout or overlay. |
+| **Unknown** | Circle + question mark | Circle with a `?` glyph outline (converted to `<path>`, NOT `<text>`). |
 
 ---
 
@@ -115,7 +117,10 @@ assets/flat/
 class IconPair {
   final String normal;
   final String error;
-  const IconPair(this.normal, this.error);
+  /// Package name for asset resolution. Defaults to 'topology_view'.
+  /// Set to null for app-local assets (not from a package).
+  final String? package;
+  const IconPair(this.normal, this.error, {this.package = 'topology_view'});
 }
 
 /// Maps device types to icon assets.
@@ -141,6 +146,31 @@ class TopoIconTheme {
     required this.generic,
     required this.unknown,
   });
+
+  /// Create a copy with selected overrides. Unspecified fields keep current values.
+  TopoIconTheme copyWith({
+    IconPair? network,
+    IconPair? switch_,
+    IconPair? host,
+    IconPair? dpu,
+    IconPair? router,
+    IconPair? firewall,
+    IconPair? server,
+    IconPair? generic,
+    IconPair? unknown,
+  }) {
+    return TopoIconTheme(
+      network: network ?? this.network,
+      switch_: switch_ ?? this.switch_,
+      host: host ?? this.host,
+      dpu: dpu ?? this.dpu,
+      router: router ?? this.router,
+      firewall: firewall ?? this.firewall,
+      server: server ?? this.server,
+      generic: generic ?? this.generic,
+      unknown: unknown ?? this.unknown,
+    );
+  }
 
   /// Look up the icon pair for a device type.
   IconPair forType(TopoDeviceType type) {
@@ -199,7 +229,7 @@ class TopologyView extends StatefulWidget {
 
 ### Cloud Clip Mode
 
-`useCloudClip` applies when `deviceType == TopoDeviceType.network` (not just when `enableGrouping` is true). This ensures cloud icons get the correct clip scaling regardless of grouping mode.
+`useCloudClip` remains tied to `enableGrouping` for now (unchanged from current behavior). Per-device-type clip modes (e.g. cloud clip only for `network` nodes) is future work — it requires refactoring `useCloudClip` from a layer-level boolean to a per-node property.
 
 ### Barrel Export
 
@@ -252,7 +282,10 @@ TopoNode(id: 'sw-01', label: 'Switch', deviceType: TopoDeviceType.switch_)
 - Create `topo_icon_theme.dart`
 - Add `iconTheme` param to `TopologyView`
 - Update icon resolution in `node_layer.dart`
+- Update `_preloadSvgAssets()` in `topology_view_widget.dart` to collect icon paths from `iconTheme.forType(node.deviceType)` for nodes without explicit `iconAsset`
+- Fix `_pathRegex` in `svg_cache.dart` to handle any attribute order: `<path\s[^>]*\bd="([^"]+)"`
 - Copy finalized SVGs into `assets/images/flat/`
+- Deprecate old placeholder SVGs in `assets/images/` root (`network_cloud_normal.svg`, `network_cloud_abnormal.svg`) — keep for backward compat but document that `flat/` icons are the supported set
 - Update `pubspec.yaml`
 - Update example playground with theme support
 
