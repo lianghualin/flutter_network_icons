@@ -48,7 +48,7 @@ class _GalleryPageState extends State<GalleryPage> {
 
   String _assetPath(String deviceType) {
     final state = _showError ? 'error' : 'normal';
-    return '../assets/flat/${deviceType}_$state.svg';
+    return 'assets/flat/${deviceType}_$state.svg';
   }
 
   @override
