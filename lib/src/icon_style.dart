@@ -1,0 +1,1 @@
+enum TopoIconStyle { flat, lnm }

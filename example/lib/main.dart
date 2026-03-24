@@ -11,7 +11,7 @@ class IconGalleryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flat Icon Gallery',
+      title: 'Icon Gallery',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
@@ -45,12 +45,13 @@ class GalleryPage extends StatefulWidget {
 class _GalleryPageState extends State<GalleryPage> {
   bool _showError = false;
   double _iconSize = 80;
+  TopoIconStyle _style = TopoIconStyle.flat;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flat Icon Gallery'),
+        title: const Text('Icon Gallery'),
       ),
       body: Column(
         children: [
@@ -69,6 +70,16 @@ class _GalleryPageState extends State<GalleryPage> {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: Row(
         children: [
+          // Style toggle
+          SegmentedButton<TopoIconStyle>(
+            segments: const [
+              ButtonSegment(value: TopoIconStyle.flat, label: Text('Flat')),
+              ButtonSegment(value: TopoIconStyle.lnm, label: Text('LNM')),
+            ],
+            selected: {_style},
+            onSelectionChanged: (v) => setState(() => _style = v.first),
+          ),
+          const SizedBox(width: 24),
           // Normal / Error toggle
           SegmentedButton<bool>(
             segments: const [
@@ -139,6 +150,7 @@ class _GalleryPageState extends State<GalleryPage> {
             painter: TopoIconPainter(
               deviceType: deviceType,
               isError: _showError,
+              style: _style,
             ),
           ),
           const SizedBox(height: 12),
