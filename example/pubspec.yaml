@@ -1,5 +1,5 @@
 name: icon_gallery
-description: Flat icon set gallery for topology_view.
+description: Icon gallery for topology_view_icons.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^2.0.9
+  topology_view_icons:
+    path: ../
 
 dev_dependencies:
   flutter_test:
@@ -18,5 +19,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/flat/

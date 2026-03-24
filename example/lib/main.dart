@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:topology_view_icons/topology_view_icons.dart';
 
 void main() {
   runApp(const IconGalleryApp());
@@ -24,15 +24,15 @@ class IconGalleryApp extends StatelessWidget {
 
 // All 9 device types with display names.
 const _deviceTypes = [
-  ('network', 'Network'),
-  ('switch', 'Switch'),
-  ('host', 'Host'),
-  ('dpu', 'DPU'),
-  ('router', 'Router'),
-  ('firewall', 'Firewall'),
-  ('server', 'Server'),
-  ('generic', 'Generic'),
-  ('unknown', 'Unknown'),
+  (TopoDeviceType.network, 'Network'),
+  (TopoDeviceType.switch_, 'Switch'),
+  (TopoDeviceType.host, 'Host'),
+  (TopoDeviceType.dpu, 'DPU'),
+  (TopoDeviceType.router, 'Router'),
+  (TopoDeviceType.firewall, 'Firewall'),
+  (TopoDeviceType.server, 'Server'),
+  (TopoDeviceType.generic, 'Generic'),
+  (TopoDeviceType.unknown, 'Unknown'),
 ];
 
 class GalleryPage extends StatefulWidget {
@@ -45,11 +45,6 @@ class GalleryPage extends StatefulWidget {
 class _GalleryPageState extends State<GalleryPage> {
   bool _showError = false;
   double _iconSize = 80;
-
-  String _assetPath(String deviceType) {
-    final state = _showError ? 'error' : 'normal';
-    return 'assets/flat/${deviceType}_$state.svg';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,14 +113,13 @@ class _GalleryPageState extends State<GalleryPage> {
       ),
       itemCount: _deviceTypes.length,
       itemBuilder: (context, index) {
-        final (id, label) = _deviceTypes[index];
-        return _buildIconCard(id, label);
+        final (deviceType, label) = _deviceTypes[index];
+        return _buildIconCard(deviceType, label);
       },
     );
   }
 
-  Widget _buildIconCard(String deviceType, String label) {
-    final path = _assetPath(deviceType);
+  Widget _buildIconCard(TopoDeviceType deviceType, String label) {
     final borderColor = _showError
         ? const Color(0xFFE74C3C).withValues(alpha: 0.3)
         : const Color(0xFF4B7BEC).withValues(alpha: 0.3);
@@ -140,17 +134,11 @@ class _GalleryPageState extends State<GalleryPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Icon
-          SizedBox(
-            width: _iconSize,
-            height: _iconSize,
-            child: SvgPicture.asset(
-              path,
-              width: _iconSize,
-              height: _iconSize,
-              fit: BoxFit.contain,
-              placeholderBuilder: (_) => const Center(
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
+          CustomPaint(
+            size: Size(_iconSize, _iconSize),
+            painter: TopoIconPainter(
+              deviceType: deviceType,
+              isError: _showError,
             ),
           ),
           const SizedBox(height: 12),
@@ -162,9 +150,9 @@ class _GalleryPageState extends State<GalleryPage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          // File name
+          // Device type name
           Text(
-            '${deviceType}_${_showError ? 'error' : 'normal'}.svg',
+            deviceType.name,
             style: TextStyle(
               fontSize: 11,
               color: Theme.of(context).colorScheme.onSurfaceVariant,

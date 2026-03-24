@@ -1,8 +1,16 @@
+import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:icon_gallery/main.dart';
 
 void main() {
-  testWidgets('Gallery renders with all device types', (WidgetTester tester) async {
+  testWidgets('Gallery renders with all device types',
+      (WidgetTester tester) async {
+    // Use a tall surface so all grid items are visible.
+    tester.view.physicalSize = const Size(1200, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(const IconGalleryApp());
     await tester.pumpAndSettle();
 
