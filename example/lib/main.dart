@@ -47,6 +47,8 @@ class _GalleryPageState extends State<GalleryPage> {
   bool _showError = false;
   double _iconSize = 80;
   TopoIconStyle _style = TopoIconStyle.flat;
+  bool _portIsUp = true;
+  bool _portIsDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,16 @@ class _GalleryPageState extends State<GalleryPage> {
           _buildControls(),
           const Divider(height: 1),
           // Icon grid
-          Expanded(child: _buildGrid()),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(24),
+              children: [
+                _buildGrid(),
+                const SizedBox(height: 24),
+                _buildPortSection(),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -115,19 +126,125 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Widget _buildGrid() {
-    return GridView.builder(
-      padding: const EdgeInsets.all(24),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        childAspectRatio: 1.0,
-      ),
-      itemCount: _deviceTypes.length,
-      itemBuilder: (context, index) {
-        final (deviceType, label) = _deviceTypes[index];
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 3,
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      childAspectRatio: 1.0,
+      children: _deviceTypes.map((entry) {
+        final (deviceType, label) = entry;
         return _buildIconCard(deviceType, label);
-      },
+      }).toList(),
+    );
+  }
+
+  Widget _buildPortSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(),
+        const SizedBox(height: 12),
+        const Text(
+          'Port (RJ45)',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        // Port state toggle
+        Row(
+          children: [
+            const Text('State:', style: TextStyle(fontSize: 14)),
+            const SizedBox(width: 12),
+            SegmentedButton<String>(
+              segments: const [
+                ButtonSegment(value: 'up', label: Text('Link Up')),
+                ButtonSegment(value: 'down', label: Text('Link Down')),
+                ButtonSegment(value: 'disabled', label: Text('Admin Down')),
+              ],
+              selected: {
+                _portIsDisabled
+                    ? 'disabled'
+                    : _portIsUp
+                        ? 'up'
+                        : 'down',
+              },
+              onSelectionChanged: (v) {
+                setState(() {
+                  switch (v.first) {
+                    case 'up':
+                      _portIsUp = true;
+                      _portIsDisabled = false;
+                    case 'down':
+                      _portIsUp = false;
+                      _portIsDisabled = false;
+                    case 'disabled':
+                      _portIsDisabled = true;
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        // Port icon card
+        _buildPortCard(),
+      ],
+    );
+  }
+
+  Widget _buildPortCard() {
+    final Color borderColor;
+    if (_portIsDisabled) {
+      borderColor = const Color(0xFF666666).withValues(alpha: 0.3);
+    } else if (_portIsUp) {
+      borderColor = const Color(0xFF27AE60).withValues(alpha: 0.3);
+    } else {
+      borderColor = const Color(0xFFAAAAAA).withValues(alpha: 0.3);
+    }
+
+    final stateLabel = _portIsDisabled
+        ? 'Admin Down'
+        : _portIsUp
+            ? 'Link Up'
+            : 'Link Down';
+
+    return SizedBox(
+      width: 200,
+      height: 200,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(12),
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomPaint(
+              size: Size(_iconSize, _iconSize),
+              painter: TopoPortPainter(
+                isUp: _portIsUp,
+                isDisabled: _portIsDisabled,
+                style: _style,
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Port',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              stateLabel,
+              style: TextStyle(
+                fontSize: 11,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontFamily: 'monospace',
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
