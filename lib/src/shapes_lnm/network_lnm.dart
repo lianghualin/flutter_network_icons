@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import '../lnm_colors.dart';
 
-/// LNM-style network: cloud silhouette with bezier bumps.
-/// Normal: green fill + dark green stroke. Error: red fill + dark red stroke.
+/// LNM-style network: classic fluffy cloud silhouette.
+/// Normal: medium blue fill (#6B9FD6) + light blue stroke (#D6E4FF).
+/// Brighter and friendlier than navy, still in the LNM blue family.
+/// Error: coral red fill + light red stroke.
 void paintNetworkLnmIcon(Canvas canvas, Rect bounds, bool isError) {
-  final fill = isError ? LnmIconColors.cloudRed : LnmIconColors.cloudGreen;
+  final fill = isError ? const Color(0xFFE86B6B) : const Color(0xFF6B9FD6);
   final stroke =
-      isError ? LnmIconColors.cloudRedStroke : LnmIconColors.cloudGreenStroke;
+      isError ? LnmIconColors.cloudErrorFill : LnmIconColors.cloudFill;
 
-  // Work within padded bounds
   final w = bounds.width;
   final h = bounds.height;
   final l = bounds.left;
   final t = bounds.top;
 
-  // Cloud shape — three bumps on top, flat-ish bottom
-  // Designed within a 100x70 viewBox, scaled to fit bounds.
   const vw = 100.0;
   const vh = 70.0;
   final scale = (w / vw).clamp(0.0, h / vh).toDouble();
@@ -28,20 +27,16 @@ void paintNetworkLnmIcon(Canvas canvas, Rect bounds, bool isError) {
   double y(double v) => oy + v * scale;
 
   final cloud = Path()
-    // Start at bottom-left
-    ..moveTo(x(15), y(55))
-    // Left bump up
-    ..cubicTo(x(2), y(55), x(-2), y(38), x(12), y(33))
-    // Top-left bump
-    ..cubicTo(x(8), y(20), x(22), y(10), x(35), y(13))
-    // Center top bump
-    ..cubicTo(x(38), y(2), x(55), y(-2), x(65), y(8))
-    // Top-right bump
-    ..cubicTo(x(75), y(2), x(92), y(8), x(92), y(23))
-    // Right side down
-    ..cubicTo(x(105), y(25), x(105), y(48), x(88), y(55))
-    // Bottom (flat)
-    ..lineTo(x(15), y(55))
+    ..moveTo(x(25), y(55))
+    ..cubicTo(x(12), y(55), x(3), y(47), x(3), y(37))
+    ..cubicTo(x(3), y(28), x(10), y(21), x(19), y(19))
+    ..cubicTo(x(20), y(10), x(28), y(3), x(40), y(3))
+    ..cubicTo(x(50), y(3), x(58), y(9), x(62), y(17))
+    ..cubicTo(x(64), y(16), x(67), y(15), x(70), y(15))
+    ..cubicTo(x(80), y(15), x(88), y(22), x(88), y(31))
+    ..cubicTo(x(88), y(32), x(88), y(33), x(88), y(33))
+    ..cubicTo(x(93), y(35), x(97), y(40), x(97), y(46))
+    ..cubicTo(x(97), y(52), x(92), y(55), x(86), y(55))
     ..close();
 
   canvas.drawPath(cloud, Paint()..color = fill);

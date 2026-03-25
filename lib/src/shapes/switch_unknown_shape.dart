@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import '../question_mark_painter.dart';
 
-/// Unknown device: ghost host (20% opacity) with centered magnifying glass,
-/// bold ? inside, and red badge top-right.
-/// Same pattern as switch_unknown but using host silhouette.
-void paintUnknownIcon(Canvas canvas, Rect bounds, Color stroke, Color fill) {
+/// Switch Unknown: ghost switch (20% opacity) with centered magnifying glass
+/// and bold ? inside. Red badge top-right.
+void paintSwitchUnknownIcon(Canvas canvas, Rect bounds, Color stroke, Color fill) {
   final w = bounds.width;
   final h = bounds.height;
   final l = bounds.left;
@@ -14,14 +13,13 @@ void paintUnknownIcon(Canvas canvas, Rect bounds, Color stroke, Color fill) {
   double y(double v) => t + (v / 80) * h;
   double s(double v) => (v / 80) * w;
 
-  // Ghost host at 20% opacity
+  // Ghost switch body (20% opacity)
   final ghostFill = fill.withValues(alpha: 0.2);
   final ghostStroke = stroke.withValues(alpha: 0.2);
 
-  // Monitor body
   final bodyRect = RRect.fromRectAndRadius(
-    Rect.fromLTRB(x(14), y(16), x(66), y(50)),
-    Radius.circular(s(3)),
+    Rect.fromLTRB(x(4), y(25), x(76), y(55)),
+    Radius.circular(s(4)),
   );
   canvas.drawRRect(bodyRect, Paint()..color = ghostFill);
   canvas.drawRRect(
@@ -32,28 +30,18 @@ void paintUnknownIcon(Canvas canvas, Rect bounds, Color stroke, Color fill) {
       ..strokeWidth = 2,
   );
 
-  // Screen inner
-  final screenRect = RRect.fromRectAndRadius(
-    Rect.fromLTRB(x(19), y(21), x(61), y(45)),
-    Radius.circular(s(1.5)),
-  );
-  canvas.drawRRect(screenRect, Paint()..color = ghostStroke.withValues(alpha: 0.15));
+  // Ghost ports
+  for (int i = 0; i < 4; i++) {
+    final portX = x(12 + i * 15.0);
+    canvas.drawRect(
+      Rect.fromLTRB(portX, y(42), portX + s(10), y(48)),
+      Paint()..color = ghostStroke,
+    );
+  }
 
-  // Stand neck
-  canvas.drawRect(
-    Rect.fromLTRB(x(36), y(50), x(44), y(58)),
-    Paint()..color = ghostStroke,
-  );
-
-  // Stand base
-  canvas.drawRect(
-    Rect.fromLTRB(x(26), y(58), x(54), y(64)),
-    Paint()..color = ghostStroke,
-  );
-
-  // Centered magnifying glass (full opacity, on top of ghost)
-  final lensCenter = Offset(x(40), y(36));
-  final lensRadius = s(15);
+  // Centered magnifying glass lens
+  final lensCenter = Offset(x(40), y(40));
+  final lensRadius = s(16);
   canvas.drawCircle(
     lensCenter,
     lensRadius,
@@ -68,10 +56,10 @@ void paintUnknownIcon(Canvas canvas, Rect bounds, Color stroke, Color fill) {
       ..strokeWidth = 2,
   );
 
-  // Handle (45°)
+  // Handle (45° from lens)
   canvas.drawLine(
-    Offset(x(51), y(47)),
-    Offset(x(60), y(56)),
+    Offset(x(52), y(52)),
+    Offset(x(62), y(62)),
     Paint()
       ..color = stroke
       ..strokeWidth = s(2.5)
@@ -87,7 +75,7 @@ void paintUnknownIcon(Canvas canvas, Rect bounds, Color stroke, Color fill) {
   );
 
   // Red badge top-right
-  final badgeCenter = Offset(x(62), y(20));
+  final badgeCenter = Offset(x(70), y(22));
   canvas.drawCircle(badgeCenter, s(5), Paint()..color = const Color(0xFFE8554E));
   canvas.drawCircle(
     badgeCenter,

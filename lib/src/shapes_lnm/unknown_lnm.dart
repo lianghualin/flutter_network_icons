@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import '../lnm_colors.dart';
+import '../question_mark_painter.dart';
 
-/// LNM-style unknown device: black monitor body, white screen, orange question
-/// mark. Error: question mark turns red.
-///
-/// SVG ref: viewBox 0 0 305 335 (monitor + switch at bottom + question mark)
-/// Simplified to just the monitor + question mark (the switch part is omitted
-/// as the spec says "Desktop monitor ... with question mark").
+/// LNM-style unknown device: ghost host (20%) with centered magnifying glass,
+/// orange bold ? inside, red badge top-right.
+/// Same pattern as switch_unknown_lnm but using host silhouette.
+/// Error: ghost screen turns red, ? turns red.
 void paintUnknownLnmIcon(Canvas canvas, Rect bounds, bool isError) {
-  // Layout within 305x280 (just the monitor portion from the SVG)
-  const svgW = 305.0;
-  const svgH = 280.0;
+  // Use host SVG coordinate space: 202x170
+  const svgW = 202.0;
+  const svgH = 170.0;
   final scale =
       (bounds.width / svgW).clamp(0.0, bounds.height / svgH).toDouble();
   final drawW = svgW * scale;
@@ -22,20 +21,21 @@ void paintUnknownLnmIcon(Canvas canvas, Rect bounds, bool isError) {
   double y(double svgY) => offsetY + svgY * scale;
   double s(double v) => v * scale;
 
-  const monitorColor = Color(0xFF000000);
-  const screenColor = Color(0xFFFFFFFF);
+  // Ghost host at 20% opacity
+  canvas.saveLayer(bounds, Paint()..color = Colors.white.withValues(alpha: 0.2));
 
-  // Monitor body (rounded rectangle)
-  final monitorRect = RRect.fromRectAndRadius(
-    Rect.fromLTRB(x(0), y(20), x(305), y(214)),
-    Radius.circular(s(22)),
+  // Monitor body
+  final bodyRect = RRect.fromRectAndRadius(
+    Rect.fromLTRB(x(0), y(0), x(202), y(124)),
+    Radius.circular(s(6)),
   );
-  canvas.drawRRect(monitorRect, Paint()..color = monitorColor);
+  canvas.drawRRect(bodyRect, Paint()..color = LnmIconColors.navy);
 
-  // Screen (white with border)
+  // Screen
+  final screenColor = isError ? LnmIconColors.errorScreen : LnmIconColors.lightGrey;
   final screenRect = RRect.fromRectAndRadius(
-    Rect.fromLTRB(x(9.5), y(30.5), x(294.5), y(205.5)),
-    Radius.circular(s(15)),
+    Rect.fromLTRB(x(7), y(8), x(196), y(102)),
+    Radius.circular(s(5)),
   );
   canvas.drawRRect(screenRect, Paint()..color = screenColor);
   canvas.drawRRect(
@@ -47,60 +47,73 @@ void paintUnknownLnmIcon(Canvas canvas, Rect bounds, bool isError) {
   );
 
   // Neck
-  final neckRect = Rect.fromLTRB(x(127), y(209), x(178), y(243));
-  canvas.drawRect(neckRect, Paint()..color = monitorColor);
+  final neckPath = Path()
+    ..moveTo(x(85), y(124))
+    ..lineTo(x(117), y(124))
+    ..lineTo(x(117), y(143.4))
+    ..lineTo(x(85), y(143.4))
+    ..close();
+  canvas.drawPath(neckPath, Paint()..color = LnmIconColors.darkNavy);
 
-  // Base (rounded rectangle)
-  final baseRect = RRect.fromRectAndRadius(
-    Rect.fromLTRB(x(82), y(243), x(222), y(257)),
-    Radius.circular(s(4)),
+  // Base
+  final basePath = Path()
+    ..moveTo(x(85), y(144.1))
+    ..cubicTo(x(74.9), y(144.7), x(56.2), y(142.5), x(48.1), y(146.3))
+    ..cubicTo(x(39.1), y(150.5), x(32.8), y(169.9), x(49.1), y(169.9))
+    ..lineTo(x(154.9), y(169.9))
+    ..cubicTo(x(159.3), y(169.9), x(161.6), y(166.7), x(161.9), y(162.6))
+    ..cubicTo(x(162.8), y(150.0), x(154.5), y(144.4), x(142.6), y(144.6))
+    ..cubicTo(x(133.9), y(144.7), x(125.2), y(144.6), x(116.6), y(144.1))
+    ..cubicTo(x(106.0), y(144.8), x(95.3), y(144.8), x(85), y(144.1))
+    ..close();
+  canvas.drawPath(basePath, Paint()..color = LnmIconColors.navy);
+
+  canvas.restore(); // End ghost layer
+
+  // Centered magnifying glass (full opacity)
+  final lensCenter = Offset(x(101), y(62));
+  final lensRadius = s(42);
+  canvas.drawCircle(
+    lensCenter,
+    lensRadius,
+    Paint()..color = Colors.white.withValues(alpha: 0.45),
   );
-  canvas.drawRect(baseRect.outerRect, Paint()..color = monitorColor);
-
-  // Question mark
-  final qColor = isError ? LnmIconColors.questionRed : LnmIconColors.questionOrange;
-  final qStrokeColor =
-      isError ? LnmIconColors.questionRed : LnmIconColors.questionOrangeStroke;
-
-  // Question mark hook (arc path) — centered on screen
-  final qStrokePaint = Paint()
-    ..color = qStrokeColor
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = s(7)
-    ..strokeCap = StrokeCap.round
-    ..strokeJoin = StrokeJoin.round;
-  final qFillPaint = Paint()..color = qColor;
-
-  // Simplified question mark path centered at roughly (152, 100)
-  final qPath = Path()
-    // The hook of the question mark
-    ..moveTo(x(120), y(85))
-    ..cubicTo(x(120), y(55), x(150), y(45), x(160), y(55))
-    ..cubicTo(x(175), y(65), x(170), y(85), x(152), y(95))
-    ..cubicTo(x(145), y(100), x(145), y(105), x(145), y(115));
-
-  canvas.drawPath(qPath, qStrokePaint);
-  canvas.drawPath(
-    qPath,
+  canvas.drawCircle(
+    lensCenter,
+    lensRadius,
     Paint()
-      ..color = qColor
+      ..color = const Color(0xFF6B7789)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = s(4)
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round,
+      ..strokeWidth = s(5),
   );
 
-  // Question mark dot
-  canvas.drawCircle(
-    Offset(x(145), y(135)),
-    s(7),
-    qFillPaint,
-  );
-  canvas.drawCircle(
-    Offset(x(145), y(135)),
-    s(7),
+  // Handle
+  canvas.drawLine(
+    Offset(x(131), y(92)),
+    Offset(x(158), y(118)),
     Paint()
-      ..color = qStrokeColor
+      ..color = const Color(0xFF6B7789)
+      ..strokeWidth = s(7)
+      ..strokeCap = StrokeCap.round,
+  );
+
+  // Orange bold ? (or red in error) — using TextPainter for proper glyph
+  final qColor = isError ? LnmIconColors.questionRed : LnmIconColors.questionOrange;
+  paintQuestionMark(
+    canvas,
+    center: lensCenter,
+    size: s(72),
+    color: qColor,
+  );
+
+  // Red badge top-right
+  final badgeCenter = Offset(x(185), y(14));
+  canvas.drawCircle(badgeCenter, s(14), Paint()..color = const Color(0xFFE8554E));
+  canvas.drawCircle(
+    badgeCenter,
+    s(14),
+    Paint()
+      ..color = Colors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = s(3),
   );

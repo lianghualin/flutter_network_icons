@@ -11,6 +11,7 @@ import 'shapes/firewall_shape.dart';
 import 'shapes/server_shape.dart';
 import 'shapes/generic_shape.dart';
 import 'shapes/unknown_shape.dart';
+import 'shapes/switch_unknown_shape.dart';
 import 'shapes_lnm/network_lnm.dart';
 import 'shapes_lnm/switch_lnm.dart';
 import 'shapes_lnm/host_lnm.dart';
@@ -20,6 +21,7 @@ import 'shapes_lnm/firewall_lnm.dart';
 import 'shapes_lnm/server_lnm.dart';
 import 'shapes_lnm/generic_lnm.dart';
 import 'shapes_lnm/unknown_lnm.dart';
+import 'shapes_lnm/switch_unknown_lnm.dart';
 
 class TopoIconPainter extends CustomPainter {
   final TopoDeviceType deviceType;
@@ -71,6 +73,8 @@ class TopoIconPainter extends CustomPainter {
         paintGenericIcon(canvas, padded, stroke, fill);
       case TopoDeviceType.unknown:
         paintUnknownIcon(canvas, padded, stroke, fill);
+      case TopoDeviceType.switchUnknown:
+        paintSwitchUnknownIcon(canvas, padded, stroke, fill);
     }
   }
 
@@ -94,6 +98,8 @@ class TopoIconPainter extends CustomPainter {
         paintGenericLnmIcon(canvas, padded, isError);
       case TopoDeviceType.unknown:
         paintUnknownLnmIcon(canvas, padded, isError);
+      case TopoDeviceType.switchUnknown:
+        paintSwitchUnknownLnmIcon(canvas, padded, isError);
     }
   }
 

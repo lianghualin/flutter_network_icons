@@ -33,6 +33,7 @@ const _deviceTypes = [
   (TopoDeviceType.server, 'Server'),
   (TopoDeviceType.generic, 'Generic'),
   (TopoDeviceType.unknown, 'Unknown'),
+  (TopoDeviceType.switchUnknown, 'Switch Unknown'),
 ];
 
 class GalleryPage extends StatefulWidget {

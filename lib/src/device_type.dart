@@ -8,4 +8,5 @@ enum TopoDeviceType {
   server,
   generic,
   unknown,
+  switchUnknown,
 }

@@ -21,11 +21,11 @@ class LnmIconColors {
   static const errorScreen = Color(0xFFD03E3E);
   static const dpuError = Color(0xFFDF3232);
 
-  // Network cloud
-  static const cloudGreen = Color(0xFF4CAF50);
-  static const cloudGreenStroke = Color(0xFF2E7D32);
-  static const cloudRed = Color(0xFFF44336);
-  static const cloudRedStroke = Color(0xFFD32F2F);
+  // Network cloud (blue, matching flat palette)
+  static const cloudFill = Color(0xFFD6E4FF);
+  static const cloudStroke = Color(0xFF4B7BEC);
+  static const cloudErrorFill = Color(0xFFFDDFDF);
+  static const cloudErrorStroke = Color(0xFFE74C3C);
 
   // Unknown
   static const questionOrange = Color(0xFFF68917);
