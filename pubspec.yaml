@@ -1,6 +1,17 @@
 name: topology_view_icons
-description: Canvas-drawn flat icons for topology_view package.
+description: >-
+  Canvas-drawn network topology device icons for Flutter. 10 device types
+  (switch, host, DPU, router, firewall, server, cloud, etc.) in flat and
+  hardware styles with normal/error states. No SVG dependencies.
 version: 1.0.0
+homepage: https://github.com/lianghualin/flutter_network_icons
+repository: https://github.com/lianghualin/flutter_network_icons
+issue_tracker: https://github.com/lianghualin/flutter_network_icons/issues
+topics:
+  - widget
+  - icon
+  - network
+  - topology
 
 environment:
   sdk: ^3.4.4

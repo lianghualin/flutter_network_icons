@@ -19,7 +19,7 @@ void paintHostLnmIcon(Canvas canvas, Rect bounds, bool isError) {
   double y(double svgY) => offsetY + svgY * scale;
   double s(double v) => v * scale;
 
-  final bodyColor = LnmIconColors.navy;
+  const bodyColor = LnmIconColors.navy;
   final screenColor = isError ? LnmIconColors.errorScreen : LnmIconColors.lightGrey;
 
   // Monitor body (rounded rectangle)

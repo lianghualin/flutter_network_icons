@@ -19,7 +19,7 @@ void paintServerLnmIcon(Canvas canvas, Rect bounds, bool isError) {
 
   final unitColor =
       isError ? LnmIconColors.errorLight : LnmIconColors.silverChassis;
-  final strokeColor = LnmIconColors.darkGrey;
+  const strokeColor = LnmIconColors.darkGrey;
 
   // LED colors for the three units (each unit has 2 LEDs)
   final ledColors = [
