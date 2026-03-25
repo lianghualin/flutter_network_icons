@@ -6,7 +6,7 @@ Canvas-drawn network topology device icons for Flutter. Provides a `TopoIconPain
 
 ## Features
 
-- **10 device types:** Network (cloud), Switch, Host, Agent, Router, Firewall, Server, Generic, Unknown, Switch Unknown
+- **10 device types + port:** Network (cloud), Switch, Host, Agent, Router, Firewall, Server, Generic, Unknown, Switch Unknown
 - **2 icon styles:** Flat (minimal, blue/red) and LNM (hardware illustration)
 - **Normal + Error states** for each icon
 - **Pure Canvas drawing** — no SVG files, no asset loading, no parsing overhead
@@ -42,11 +42,33 @@ CustomPaint(
 | `generic` | Simple circle |
 | `unknown` | Ghost host + magnifying glass with ? |
 | `switchUnknown` | Ghost switch + magnifying glass with ? |
+| `port` (via `TopoPortPainter`) | RJ45 Ethernet port with Link Up/Down/Admin Down states |
 
 ## Icon Styles
 
 - **`TopoIconStyle.flat`** — Minimal flat icons. Normal: blue (`#4B7BEC`), Error: red (`#E74C3C`).
 - **`TopoIconStyle.lnm`** — Hardware-style illustrations matching LNM network management UI. Uses chassis greys, navy blues, teal/coral LEDs.
+
+## Port Icon
+
+The port uses a separate `TopoPortPainter` with richer state control:
+
+```dart
+CustomPaint(
+  size: const Size(80, 80),
+  painter: TopoPortPainter(
+    isUp: true,        // link up (green) vs link down (grey)
+    isDisabled: false,  // admin down (dark grey) — overrides isUp
+    style: TopoIconStyle.flat,
+  ),
+)
+```
+
+| State | `isDisabled` | `isUp` | Flat Color |
+|-------|-------------|--------|------------|
+| Link Up | `false` | `true` | Green |
+| Link Down | `false` | `false` | Light grey |
+| Admin Down | `true` | — | Dark grey |
 
 ## Example
 

@@ -1,3 +1,10 @@
+## 1.1.0
+
+- New: RJ45 port icon with `TopoPortPainter`
+- Three visual states: Link Up, Link Down, Admin Down
+- Flat and LNM hardware styles
+- `PortColors` constants for flat-style port colors
+
 ## 1.0.0
 
 - Initial release
