@@ -1,3 +1,10 @@
+## 1.2.1
+
+- Redesign LNM port icon with bold full-housing state colors (green/grey/black)
+- White pin contacts for better contrast
+- Removed small LED dot indicator
+- Full-width cavity layout
+
 ## 1.1.0
 
 - New: RJ45 port icon with `TopoPortPainter`
