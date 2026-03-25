@@ -6,3 +6,4 @@ pubspec.lock
 example/.metadata
 example/pubspec.lock
 example/web/
+.superpowers/
