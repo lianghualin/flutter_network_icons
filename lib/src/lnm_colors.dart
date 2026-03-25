@@ -19,7 +19,7 @@ class LnmIconColors {
   static const errorLight = Color(0xFFF56666);
   static const errorDark = Color(0xFFBD0000);
   static const errorScreen = Color(0xFFD03E3E);
-  static const dpuError = Color(0xFFDF3232);
+  static const agentError = Color(0xFFDF3232);
 
   // Network cloud (blue, matching flat palette)
   static const cloudFill = Color(0xFFD6E4FF);

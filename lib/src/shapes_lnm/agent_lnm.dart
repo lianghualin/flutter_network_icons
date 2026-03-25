@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../lnm_colors.dart';
 
-/// LNM-style DPU: tall vertical rack unit (portrait).
+/// LNM-style Agent: tall vertical rack unit (portrait).
 /// Rounded rectangle body, row of small LED circles near top, two square port
 /// areas (NETA/NETB) in the lower section.
 ///
 /// SVG ref: viewBox 0 0 133 355
-void paintDpuLnmIcon(Canvas canvas, Rect bounds, bool isError) {
+void paintAgentLnmIcon(Canvas canvas, Rect bounds, bool isError) {
   const svgW = 133.0;
   const svgH = 355.0;
   final scale =
@@ -20,7 +20,7 @@ void paintDpuLnmIcon(Canvas canvas, Rect bounds, bool isError) {
   double y(double svgY) => offsetY + svgY * scale;
   double s(double v) => v * scale;
 
-  final bodyColor = isError ? LnmIconColors.dpuError : LnmIconColors.nearBlack;
+  final bodyColor = isError ? LnmIconColors.agentError : LnmIconColors.nearBlack;
 
   // Main body (rounded rectangle)
   final bodyRect = RRect.fromRectAndRadius(

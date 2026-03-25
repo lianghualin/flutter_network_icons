@@ -2,7 +2,7 @@ enum TopoDeviceType {
   network,
   switch_,
   host,
-  dpu,
+  agent,
   router,
   firewall,
   server,

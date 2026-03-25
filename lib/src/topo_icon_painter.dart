@@ -5,7 +5,7 @@ import 'icon_style.dart';
 import 'shapes/network_shape.dart';
 import 'shapes/switch_shape.dart';
 import 'shapes/host_shape.dart';
-import 'shapes/dpu_shape.dart';
+import 'shapes/agent_shape.dart';
 import 'shapes/router_shape.dart';
 import 'shapes/firewall_shape.dart';
 import 'shapes/server_shape.dart';
@@ -15,7 +15,7 @@ import 'shapes/switch_unknown_shape.dart';
 import 'shapes_lnm/network_lnm.dart';
 import 'shapes_lnm/switch_lnm.dart';
 import 'shapes_lnm/host_lnm.dart';
-import 'shapes_lnm/dpu_lnm.dart';
+import 'shapes_lnm/agent_lnm.dart';
 import 'shapes_lnm/router_lnm.dart';
 import 'shapes_lnm/firewall_lnm.dart';
 import 'shapes_lnm/server_lnm.dart';
@@ -61,8 +61,8 @@ class TopoIconPainter extends CustomPainter {
         paintSwitchIcon(canvas, padded, stroke, fill);
       case TopoDeviceType.host:
         paintHostIcon(canvas, padded, stroke, fill);
-      case TopoDeviceType.dpu:
-        paintDpuIcon(canvas, padded, stroke, fill);
+      case TopoDeviceType.agent:
+        paintAgentIcon(canvas, padded, stroke, fill);
       case TopoDeviceType.router:
         paintRouterIcon(canvas, padded, stroke, fill);
       case TopoDeviceType.firewall:
@@ -86,8 +86,8 @@ class TopoIconPainter extends CustomPainter {
         paintSwitchLnmIcon(canvas, padded, isError);
       case TopoDeviceType.host:
         paintHostLnmIcon(canvas, padded, isError);
-      case TopoDeviceType.dpu:
-        paintDpuLnmIcon(canvas, padded, isError);
+      case TopoDeviceType.agent:
+        paintAgentLnmIcon(canvas, padded, isError);
       case TopoDeviceType.router:
         paintRouterLnmIcon(canvas, padded, isError);
       case TopoDeviceType.firewall:

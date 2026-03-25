@@ -27,7 +27,7 @@ const _deviceTypes = [
   (TopoDeviceType.network, 'Network'),
   (TopoDeviceType.switch_, 'Switch'),
   (TopoDeviceType.host, 'Host'),
-  (TopoDeviceType.dpu, 'DPU'),
+  (TopoDeviceType.agent, 'Agent'),
   (TopoDeviceType.router, 'Router'),
   (TopoDeviceType.firewall, 'Firewall'),
   (TopoDeviceType.server, 'Server'),

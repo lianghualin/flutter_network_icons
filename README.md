@@ -4,7 +4,7 @@ Canvas-drawn network topology device icons for Flutter. Provides a `TopoIconPain
 
 ## Features
 
-- **10 device types:** Network (cloud), Switch, Host, DPU, Router, Firewall, Server, Generic, Unknown, Switch Unknown
+- **10 device types:** Network (cloud), Switch, Host, Agent, Router, Firewall, Server, Generic, Unknown, Switch Unknown
 - **2 icon styles:** Flat (minimal, blue/red) and LNM (hardware illustration)
 - **Normal + Error states** for each icon
 - **Pure Canvas drawing** — no SVG files, no asset loading, no parsing overhead
@@ -33,7 +33,7 @@ CustomPaint(
 | `network` | Cloud silhouette (network/subnet) |
 | `switch_` | Network switch with ports |
 | `host` | Monitor with stand |
-| `dpu` | Vertical rack unit |
+| `agent` | Vertical rack unit |
 | `router` | Circle with directional arrows |
 | `firewall` | Shield shape |
 | `server` | Stacked rack units |

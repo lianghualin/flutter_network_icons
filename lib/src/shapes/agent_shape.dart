@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Vertical rack unit with LED dots, divider line, and two port squares.
 /// SVG ref: viewBox 0 0 80 80; body 22,8->58,72; LEDs at y=16,24,32; divider at y=44; ports 28-38 and 42-52 at y=50-58.
-void paintDpuIcon(Canvas canvas, Rect bounds, Color stroke, Color fill) {
+void paintAgentIcon(Canvas canvas, Rect bounds, Color stroke, Color fill) {
   final w = bounds.width;
   final h = bounds.height;
   final l = bounds.left;
