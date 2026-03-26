@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:topology_view_icons/src/port_colors.dart';
 import 'package:topology_view_icons/src/port_painter.dart';
 import 'package:topology_view_icons/src/icon_style.dart';
+import 'package:topology_view_icons/src/port_direction.dart';
 
 void main() {
   group('PortColors', () {
@@ -50,6 +51,48 @@ void main() {
       const a = TopoPortPainter();
       const b = TopoPortPainter();
       expect(a.shouldRepaint(b), false);
+    });
+
+    test('defaults to direction=PortDirection.up', () {
+      const painter = TopoPortPainter();
+      expect(painter.direction, PortDirection.up);
+    });
+
+    test('shouldRepaint returns true when direction changes', () {
+      const a = TopoPortPainter(direction: PortDirection.up);
+      const b = TopoPortPainter(direction: PortDirection.down);
+      expect(a.shouldRepaint(b), true);
+    });
+
+    test('shouldRepaint returns false when direction is the same', () {
+      const a = TopoPortPainter(direction: PortDirection.left);
+      const b = TopoPortPainter(direction: PortDirection.left);
+      expect(a.shouldRepaint(b), false);
+    });
+
+    test('paint does not throw for all direction/style/state combinations', () {
+      for (final direction in PortDirection.values) {
+        for (final style in TopoIconStyle.values) {
+          for (final isUp in [true, false]) {
+            for (final isDisabled in [true, false]) {
+              final painter = TopoPortPainter(
+                isUp: isUp,
+                isDisabled: isDisabled,
+                style: style,
+                direction: direction,
+              );
+              final recorder = PictureRecorder();
+              final canvas = Canvas(recorder);
+              expect(
+                () => painter.paint(canvas, const Size(80, 80)),
+                returnsNormally,
+                reason:
+                    'direction=$direction style=$style isUp=$isUp isDisabled=$isDisabled',
+              );
+            }
+          }
+        }
+      }
     });
 
     test('paint does not throw for all state/style combinations', () {

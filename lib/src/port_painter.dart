@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'icon_style.dart';
 import 'port_colors.dart';
+import 'port_direction.dart';
 import 'shapes/port_shape.dart';
 import 'shapes_lnm/port_lnm.dart';
 
@@ -10,19 +11,31 @@ import 'shapes_lnm/port_lnm.dart';
 /// - `isDisabled: true` → Admin Down (dark grey) — overrides [isUp]
 /// - `isUp: true` → Link Up (green)
 /// - `isUp: false` → Link Down (light grey)
+///
+/// Use [direction] to rotate the port icon (default: [PortDirection.up]).
 class TopoPortPainter extends CustomPainter {
   final bool isUp;
   final bool isDisabled;
   final TopoIconStyle style;
+  final PortDirection direction;
 
   const TopoPortPainter({
     this.isUp = true,
     this.isDisabled = false,
     this.style = TopoIconStyle.flat,
+    this.direction = PortDirection.up,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.save();
+
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    canvas.translate(cx, cy);
+    canvas.rotate(direction.radians);
+    canvas.translate(-cx, -cy);
+
     final rect = Offset.zero & size;
     final padded = rect.deflate(size.width * 0.05);
 
@@ -32,6 +45,8 @@ class TopoPortPainter extends CustomPainter {
       case TopoIconStyle.lnm:
         paintPortLnmIcon(canvas, padded, isUp, isDisabled);
     }
+
+    canvas.restore();
   }
 
   void _paintFlat(Canvas canvas, Rect padded) {
@@ -56,6 +71,7 @@ class TopoPortPainter extends CustomPainter {
   bool shouldRepaint(covariant TopoPortPainter oldDelegate) {
     return oldDelegate.isUp != isUp ||
         oldDelegate.isDisabled != isDisabled ||
-        oldDelegate.style != style;
+        oldDelegate.style != style ||
+        oldDelegate.direction != direction;
   }
 }
