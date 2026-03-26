@@ -29,6 +29,7 @@ export 'src/shapes_lnm/generic_lnm.dart';
 export 'src/shapes_lnm/unknown_lnm.dart';
 export 'src/shapes_lnm/switch_unknown_lnm.dart';
 // Port icon (separate painter with isUp/isDisabled state)
+export 'src/port_direction.dart';
 export 'src/port_colors.dart';
 export 'src/port_painter.dart';
 export 'src/shapes/port_shape.dart';
