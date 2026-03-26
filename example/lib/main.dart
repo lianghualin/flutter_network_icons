@@ -49,6 +49,7 @@ class _GalleryPageState extends State<GalleryPage> {
   TopoIconStyle _style = TopoIconStyle.flat;
   bool _portIsUp = true;
   bool _portIsDisabled = false;
+  PortDirection _portDirection = PortDirection.up;
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +187,37 @@ class _GalleryPageState extends State<GalleryPage> {
             ),
           ],
         ),
+        const SizedBox(height: 12),
+        // Port direction toggle
+        Row(
+          children: [
+            const Text('Direction:', style: TextStyle(fontSize: 14)),
+            const SizedBox(width: 12),
+            SegmentedButton<PortDirection>(
+              segments: const [
+                ButtonSegment(
+                  value: PortDirection.up,
+                  label: Text('Up'),
+                ),
+                ButtonSegment(
+                  value: PortDirection.down,
+                  label: Text('Down'),
+                ),
+                ButtonSegment(
+                  value: PortDirection.left,
+                  label: Text('Left'),
+                ),
+                ButtonSegment(
+                  value: PortDirection.right,
+                  label: Text('Right'),
+                ),
+              ],
+              selected: {_portDirection},
+              onSelectionChanged: (v) =>
+                  setState(() => _portDirection = v.first),
+            ),
+          ],
+        ),
         const SizedBox(height: 16),
         // Port icon card
         _buildPortCard(),
@@ -227,6 +259,7 @@ class _GalleryPageState extends State<GalleryPage> {
                 isUp: _portIsUp,
                 isDisabled: _portIsDisabled,
                 style: _style,
+                direction: _portDirection,
               ),
             ),
             const SizedBox(height: 12),
