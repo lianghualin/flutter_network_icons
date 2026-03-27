@@ -1,3 +1,11 @@
+## 1.3.0
+
+- New: `PortDirection` enum for 4-direction port orientation (up, down, left, right)
+- `TopoPortPainter` now accepts a `direction` parameter (default: `PortDirection.up`)
+- Ports rotate via canvas transform — both flat and LNM styles supported
+- Narrowed LNM port icon proportions for a more realistic RJ45 look
+- Example gallery now includes a direction toggle for port icons
+
 ## 1.2.1
 
 - Redesign LNM port icon with bold full-housing state colors (green/grey/black)

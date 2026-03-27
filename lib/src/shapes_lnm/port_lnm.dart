@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 /// Whole housing changes color by state: green (up), grey (down), black (disabled).
 /// White pin contacts for contrast. No LED dot.
 /// SVG ref: viewBox 0 0 160 130.
-void paintPortLnmIcon(Canvas canvas, Rect bounds, bool isUp, bool isDisabled) {
+void paintPortLnmIcon(
+  Canvas canvas,
+  Rect bounds,
+  bool isUp,
+  bool isDisabled, {
+  double widthFactor = 0.7,
+}) {
   const svgW = 160.0;
   const svgH = 130.0;
   final scale =
@@ -14,7 +20,9 @@ void paintPortLnmIcon(Canvas canvas, Rect bounds, bool isUp, bool isDisabled) {
   final offsetX = bounds.left + (bounds.width - drawW) / 2;
   final offsetY = bounds.top + (bounds.height - drawH) / 2;
 
-  double x(double svgX) => offsetX + svgX * scale;
+  // Scale x-coordinates toward horizontal center for narrowing
+  const cx = svgW / 2;
+  double x(double svgX) => offsetX + (cx + (svgX - cx) * widthFactor) * scale;
   double y(double svgY) => offsetY + svgY * scale;
   double s(double v) => v * scale;
 
@@ -72,8 +80,8 @@ void paintPortLnmIcon(Canvas canvas, Rect bounds, bool isUp, bool isDisabled) {
     ..strokeCap = StrokeCap.round;
   final pinStartY = y(28);
   final pinEndY = y(55);
+  final pinSpacing = s(12) * widthFactor;
   final pinStartX = x(36);
-  final pinSpacing = s(12);
   for (int i = 0; i < 8; i++) {
     final px = pinStartX + i * pinSpacing;
     canvas.drawLine(Offset(px, pinStartY), Offset(px, pinEndY), pinPaint);

@@ -60,6 +60,7 @@ CustomPaint(
     isUp: true,        // link up (green) vs link down (grey)
     isDisabled: false,  // admin down (dark grey) — overrides isUp
     style: TopoIconStyle.flat,
+    direction: PortDirection.up,  // up, down, left, right
   ),
 )
 ```
@@ -69,6 +70,17 @@ CustomPaint(
 | Link Up | `false` | `true` | Green |
 | Link Down | `false` | `false` | Light grey |
 | Admin Down | `true` | — | Dark grey |
+
+### Port Direction
+
+Use `PortDirection` to rotate the port icon for different positions around a device:
+
+| Direction | Rotation | Use case |
+|-----------|----------|----------|
+| `up` | 0° (default) | Top-row ports |
+| `down` | 180° | Bottom-row ports |
+| `left` | 270° | Left-side ports |
+| `right` | 90° | Right-side ports |
 
 ## Example
 
